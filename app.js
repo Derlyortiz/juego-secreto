@@ -1,7 +1,8 @@
 let numeroSecreto = 0;
 let intentos = 0;
 let listaNumerosSorteados = [];
-let numeroMaximo = 10;
+let numeroMaximo = 25;
+const MAX_DIGITOS = numeroMaximo.toString().length;
 
 
 
@@ -17,8 +18,16 @@ function verificarIntento() {
     if (numeroDeUsuario === numeroSecreto) {
         asignarTextoElemento('p',`Acertaste el número en ${intentos} ${(intentos === 1) ? 'vez' : 'veces'}`);
         document.getElementById('reiniciar').removeAttribute('disabled');
+        document.getElementById('intentar').disabled = true;
     } else {
         //El usuario no acertó.
+        if (intentos === 5) {
+            asignarTextoElemento('p', `Perdiste! El número secreto era ${numeroSecreto}`);
+            document.getElementById('valorUsuario').setAttribute('disabled','true');
+            document.getElementById('reiniciar').removeAttribute('disabled');
+            document.getElementById('intentar').disabled = true;
+            return;
+        }
         if (numeroDeUsuario > numeroSecreto) {
             asignarTextoElemento('p','El número secreto es menor');
         } else {
@@ -31,7 +40,11 @@ function verificarIntento() {
 }
 
 function limpiarCaja() {
-    document.querySelector('#valorUsuario').value = '';
+    let input = document.getElementById('valorUsuario');
+    input.value = '';
+    input.focus();
+
+    document.getElementById('intentar').disabled = true;
 }
 
 function generarNumeroSecreto() {
@@ -54,8 +67,31 @@ function generarNumeroSecreto() {
 }
 
 function condicionesIniciales() {
+    const input = document.getElementById('valorUsuario');
+    input.addEventListener('keydown', function (event) {
+        if (['e', 'E', '+', '-'].includes(event.key)) {
+        event.preventDefault();
+    }
+
+    if (event.key === 'Enter' && !document.getElementById('intentar').disabled) {
+        verificarIntento();
+    }
+    });
+
+    input.addEventListener('input', function () {
+    if (input.value.length > MAX_DIGITOS) {
+        input.value = input.value.slice(0, MAX_DIGITOS);
+    }
+    });
+    
+    const botonIntentar = document.getElementById('intentar');
+    input.addEventListener('input', function () {
+    botonIntentar.disabled = input.value.trim() === '';})
     asignarTextoElemento('h1','Juego del número secreto!');
+    asignarTextoElemento('h2',`Tienes solo 5 intentos para acertar el número`);
     asignarTextoElemento('p',`Indica un número del 1 al ${numeroMaximo}`);
+    asignarTextoElemento('h3',`1 al ${numeroMaximo}`);
+    document.getElementById('valorUsuario').disabled = false;
     numeroSecreto = generarNumeroSecreto();
     intentos = 1;
     console.log(numeroSecreto);
@@ -70,6 +106,7 @@ function reiniciarJuego() {
     condicionesIniciales();
     //Deshabilitar el botón de nuevo juego
     document.querySelector('#reiniciar').setAttribute('disabled','true');
+    document.getElementById('intentar').disabled = true;
     
 }
 

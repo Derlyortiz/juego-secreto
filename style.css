@@ -96,13 +96,28 @@ body::before {
 
 h1 {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: 72px;
-    padding-bottom: 3rem;
+    font-size: 60px;
+    padding-bottom: 1rem;
+}
+
+h2 {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 30px;
+    padding-bottom: 2rem;
+    color: #ed0000;
+
 }
 
 p,
 button {
     font-family: 'Inter', sans-serif;
+}
+
+h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    padding-bottom: 2rem;
+    font-weight: 400;
 }
 
 .texto__parrafo {
