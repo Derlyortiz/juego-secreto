@@ -4,7 +4,11 @@ let listaNumerosSorteados = [];
 let numeroMaximo = 25;
 const MAX_DIGITOS = numeroMaximo.toString().length;
 
-
+function trackearEvento(nombreEvento, parametros = {}) {
+    if (typeof gtag === 'function') {
+        gtag('event', nombreEvento, parametros);
+    }
+}
 
 function asignarTextoElemento(elemento, texto) {
     let elementoHTML = document.querySelector(elemento);
@@ -19,6 +23,7 @@ function verificarIntento() {
         asignarTextoElemento('p',`Acertaste el número en ${intentos} ${(intentos === 1) ? 'vez' : 'veces'}`);
         document.getElementById('reiniciar').removeAttribute('disabled');
         document.getElementById('intentar').disabled = true;
+        trackearEvento('juego_ganado', { intentos_usados: intentos });
     } else {
         //El usuario no acertó.
         if (intentos === 5) {
@@ -26,6 +31,7 @@ function verificarIntento() {
             document.getElementById('valorUsuario').setAttribute('disabled','true');
             document.getElementById('reiniciar').removeAttribute('disabled');
             document.getElementById('intentar').disabled = true;
+            trackearEvento('juego_perdido', { numero_secreto: numeroSecreto });
             return;
         }
         if (numeroDeUsuario > numeroSecreto) {
@@ -95,6 +101,7 @@ function condicionesIniciales() {
     numeroSecreto = generarNumeroSecreto();
     intentos = 1;
     console.log(numeroSecreto);
+    trackearEvento('juego_iniciado');
 }
 
 function reiniciarJuego() {
